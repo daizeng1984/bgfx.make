@@ -27,5 +27,11 @@ in pkgs.mkShell {
   ];
 
   enableParallelBuilding = true;
+
+  shellHook = ''
+    export DYLD_LIBRARY_PATH="$PWD/deps/bgfx/.build/osx-x64/bin/:$DYLD_LIBRARY_PATH"
+    echo "🚀 bgfx ready!"
+  '';
+
 }
 
