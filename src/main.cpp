@@ -16,6 +16,7 @@
 #endif
 #include <GLFW/glfw3native.h>
 #include "misc/logo.h"
+#include "test/test.h"
 
 static bool s_showStats = false;
 
@@ -90,6 +91,7 @@ int main(int argc, char **argv)
 		// Advance to next frame. Process submitted rendering primitives.
         bgfx::frame();
 	}
+	Test t;
 	bgfx::shutdown();
 	glfwTerminate();
 	return 0;

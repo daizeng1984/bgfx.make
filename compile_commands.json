@@ -52504,5 +52504,25 @@
    "-Ideps/bimg/include"
   ],
   "file": "./src/main.cpp"
+ },
+ {
+  "directory": "/Users/zdai/Workspace/bgfx.make",
+  "arguments": [
+   "clang++",
+   "./src/main.cpp",
+   "./src/test/test.cpp",
+   "-o",
+   "./build/main",
+   "-w",
+   "deps/bgfx/.build/osx-x64/bin/libbgfx-shared-libRelease.dylib",
+   "-framework",
+   "OpenGL",
+   "-lglfw",
+   "-stdlib=libc++",
+   "-Ideps/bgfx/include",
+   "-Ideps/bx/include",
+   "-Ideps/bimg/include"
+  ],
+  "file": "./src/test/test.cpp"
  }
 ]
