@@ -15,7 +15,7 @@
 #define GLFW_EXPOSE_NATIVE_COCOA
 #endif
 #include <GLFW/glfw3native.h>
-#include "logo.h"
+#include "misc/logo.h"
 
 static bool s_showStats = false;
 
@@ -88,7 +88,7 @@ int main(int argc, char **argv)
 		// Enable stats or debug text.
 		bgfx::setDebug(s_showStats ? BGFX_DEBUG_STATS : BGFX_DEBUG_TEXT);
 		// Advance to next frame. Process submitted rendering primitives.
-		bgfx::frame();
+        bgfx::frame();
 	}
 	bgfx::shutdown();
 	glfwTerminate();

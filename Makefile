@@ -16,17 +16,22 @@ SHADERCOMPILER = ./deps/bgfx/.build/osx-x64/bin/shadercRelease
 SHADER_OUT = $(OUT)/shaders
 SHADER_COMPILE = $(SHADERCOMPILER) \
 	-f $(1).sc \
-	-o $(1).bin \
+	-o $(SHADER_OUT)/$(1).bin \
 	--platform osx \
 	--type $(2) \
 	--verbose \
 	-i deps/bgfx/src
 
+# src files
+rwildcard=$(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
+SRC_FILES = $(call rwildcard,./src/misc,*.cpp)
+
 # build output
 OUT = ./build
 MKDIR_P = mkdir -p
+SRC = ./src
 
-.PHONY : deps all shaders out
+.PHONY : deps all shaders out clean bgfx
 # Output
 out:
 	$(MKDIR_P) $(OUT)
@@ -37,17 +42,21 @@ deps : bgfx
 bgfx : 
 	cd ./deps/bgfx && $(MAKE) osx
 
-shaders:
+shaders: deps
 	$(call SHADER_COMPILE,v_simple,vertex)
 	$(call SHADER_COMPILE,f_simple,fragment)
 
-helloworld : main.cpp out deps shaders
-	$(CXX) main.cpp -o  $(OUT)/main $(CXXFLAGS) $(LD_FLAGS) $(BGFX_HEADERS)
+main : $(SRC)/main.cpp out shaders
+	$(CXX) $(SRC)/main.cpp $(SRC_FILES) -o  $(OUT)/main $(CXXFLAGS) $(LD_FLAGS) $(BGFX_HEADERS)
 
-all : helloworld
+all : main
 
-run : all
-	DYLD_LIBRARY_PATH=$(BGFX_BIN) ./main
+run :
+	$(OUT)/main
 
 code : 
 	compiledb $(MAKE) all
+
+clean: 
+	rm -rf ./deps/bgfx/.build
+	rm -rf ./build
