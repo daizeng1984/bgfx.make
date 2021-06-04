@@ -1,11 +1,14 @@
 # { pkgs ? import <nixpkgs> {} }:
 { pkgs ? 
-import <nixpkgs> {}
-# import (builtins.fetchTarball {
-#       name = "nixos-20.09";
-#       url = "https://codeload.github.com/NixOS/nixpkgs/tar.gz/20.09";
-#       sha256 = "1wg61h4gndm3vcprdcg7rc4s1v3jkm5xd7lw8r2f67w502y94gcy";
-#     }) {}
+import (builtins.fetchTarball {
+      name = "nixos-21.05";
+      url = "https://codeload.github.com/NixOS/nixpkgs/tar.gz/21.05";
+      sha256 = "1ckzhh24mgz6jd1xhfgx0i9mijk6xjqxwsshnvq789xsavrmsc36";
+    }) {
+      config.allowUnfree = true;
+      # config.allowBroken = true;
+      # config.allowUnsupportedSystem = true;
+    }
 }:
 
 let
@@ -24,6 +27,12 @@ in pkgs.mkShell {
     glfw
     darwin.apple_sdk.frameworks.Foundation
     darwin.apple_sdk.frameworks.OpenGL
+    lldb
+    gdb
+    # vscode-extensions.vadimcn.vscode-lldb
+    # vscode-extensions.ms-vscode.cpptools #not support on mac yet
+    # vscode-with-extensions 
+    # vscode-extensions.vscodevim.vim
   ];
 
   enableParallelBuilding = true;

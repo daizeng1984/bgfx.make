@@ -23,7 +23,7 @@ endif
 CC = clang
 CXX = clang++
 MAKE = make
-CXXFLAGS = -w
+CXXFLAGS = -g -w
 
 OUT = ./build
 ASSETS_OUT = $(OUT)/assets
@@ -46,6 +46,9 @@ SRC_FILES = $(call rwildcard,$(SRC),*.cpp)
 # build output
 .PHONY : deps all shaders out clean clean.all bgfx
 # Output
+main : shaders deps out
+	$(CXX) $(SRC_FILES) -o  $(OUT)/main $(CXXFLAGS) $(LD_FLAGS) $(BGFX_HEADERS)
+
 all : main shaders assets
 
 code : 
@@ -65,9 +68,6 @@ shaders: deps out
 	cd $(SRC)/shaders && $(MAKE) TARGET=4 #GLSL
 assets: deps out
 	cd ./assets && $(MAKE) all
-
-main : deps out
-	$(CXX) $(SRC_FILES) -o  $(OUT)/main $(CXXFLAGS) $(LD_FLAGS) $(BGFX_HEADERS)
 
 
 run :
