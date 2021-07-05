@@ -1,5 +1,15 @@
 BGFX_DIR = deps/bgfx
 
+# Defaults
+BUILD ?= debug
+TARGET ?= main-$(BUILD)
+
+ifeq '$(BUILD)' 'debug'
+CXXEXTRA := -g3
+else
+CXXEXTRA := -O3
+endif
+
 # OS & File
 UNAME:=$(shell uname)
 ifeq ($(UNAME),$(filter $(UNAME),Linux Darwin))
@@ -23,7 +33,7 @@ endif
 CC = clang
 CXX = clang++
 MAKE = make
-CXXFLAGS = -g -w
+CXXFLAGS = -w $(CXXEXTRA)
 
 OUT = ./build
 ASSETS_OUT = $(OUT)/assets
@@ -42,13 +52,19 @@ SRC = ./src
 rwildcard=$(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
 
 SRC_FILES = $(call rwildcard,$(SRC),*.cpp)
+OBJECT = $(patsubst $(SRC)/%,$(OUT)/obj/%,$(patsubst %.cpp,%-$(BUILD).o,$(SRC_FILES)))
 
 # build output
 .PHONY : deps all shaders out clean clean.all bgfx
 # Output
-main : shaders deps out
-	$(CXX) $(SRC_FILES) -o  $(OUT)/main $(CXXFLAGS) $(LD_FLAGS) $(BGFX_HEADERS)
+main : $(OBJECT) shaders deps out
+	$(CXX) $(OBJECT) -o $(OUT)/main $(LD_FLAGS) 
 
+$(OUT)/obj/%-$(BUILD).o : $(SRC)/%.cpp | deps out
+	$(call CMD_MKDIR,$(dir $@))
+	$(CXX) -c $< -o $@ $(CXXFLAGS) $(BGFX_HEADERS) 
+
+$(OUT)/obj/%/%-$(BUILD).o : $(SRC)/%.cpp | deps out
 all : main shaders assets
 
 code : 
